@@ -1,0 +1,55 @@
+﻿.acChartContainer {
+    display: grid;
+    grid-template-areas:
+        "finedust25 finedust25 finedust10 finedust10"
+        "o3Chart     coChart    no2Chart   so2Chart";
+    grid-auto-columns: 1fr 1fr 1fr 1fr;
+    align-items: start;
+    justify-items: stretch;
+    gap: 10px;
+    width: 600px;
+}
+
+.dust25Container {
+    grid-area: finedust25;
+    display: block;
+    border: 1px solid lightgray;
+}
+
+.dust10Container {
+    grid-area: finedust10;
+    display: block;
+    border: 1px solid lightgray;
+}
+
+.o3Container {
+    grid-area: o3Chart;
+    display: block;
+    border: 1px solid lightgray;
+}
+
+.coContainer {
+    grid-area: coChart;
+    display: block;
+    border: 1px solid lightgray;
+}
+
+.no2Container {
+    grid-area: no2Chart;
+    display: block;
+    border: 1px solid lightgray;
+}
+
+.so2Container {
+    grid-area: so2Chart;
+    display: block;
+    border: 1px solid lightgray;
+}
+
+.chartCanvas1 {
+    width: 200px;
+}
+
+.chartCanvas2 {
+    width: 100px;
+}
