@@ -55,26 +55,26 @@ function getColorForGrade(grade) {
     };
 
     switch (grade) {
-        case '2': // 보통(녹색계열)
+        case '2': 
             gradeColorProfile.baseColor = [96, 195, 129];
             gradeColorProfile.lighterColor = [162, 227, 184];
             gradeColorProfile.lightestColor = [236, 249, 240];
             gradeColorProfile.darkerColor = 'lightseagreen';
             break;
-        case '3': // 나쁨(주황계열)
+        case '3': 
             gradeColorProfile.baseColor = [242, 157, 82];
             gradeColorProfile.lighterColor = [255, 208, 166];
             gradeColorProfile.lightestColor = [253, 248, 244];
             gradeColorProfile.darkerColor = 'coral';
             break;
-        case '4': // 매우나쁨(빨강계열)
+        case '4': 
             gradeColorProfile.baseColor = [229, 43, 39];
             gradeColorProfile.lighterColor = [248, 121, 118];
             gradeColorProfile.lightestColor = [252, 238, 238];
             gradeColorProfile.darkerColor = 'darkred';
             break;
-        case '1': // 좋음(파랑계열)
-        default: // 데이터를 받아오지 못했을 때를 포함한 디폴트 색상으로 쓴다.
+        case '1': 
+        default: 
             gradeColorProfile.baseColor = [0, 165, 232];
             gradeColorProfile.lighterColor = [176, 217, 237];
             gradeColorProfile.lightestColor = [245, 252, 255];
@@ -140,9 +140,9 @@ function gradeValue(pName, srcData) {
 }
 
 function ACDataItem(name, value, unit) {
-    this.name = name; // 카테고리 이름
-    this.value = value; // 해당 카테고리의 값
-    this.unit = unit; // 해당 카테고리의 단위
+    this.name = name; 
+    this.value = value; 
+    this.unit = unit; 
 }
 
 function AirConditionDataUnit() {
@@ -194,9 +194,7 @@ async function getAirConditionData() {
         fetchResult = 'FAILED';
 
     let res = parseAirConditionData(realData.find(isArea));
-    console.log('fetched');
-    //res.pm25Value.value = '-';
-    //res.pm25Value.value = 10;
+
     generateCharts(res);
 }
 
@@ -242,7 +240,7 @@ function parseAirConditionData(data) {
 
 const colorProfiles = [];
 function generateCharts(data) {
-    const chartLimits = [75, 150, 0.38, 32, 1.1, 0.6]; // 각 차트의 최대값들
+    const chartLimits = [75, 150, 0.38, 32, 1.1, 0.6]; 
 
     const PM25Idx = 0;
     const PM10Idx = 1;
@@ -258,26 +256,12 @@ function generateCharts(data) {
     const no2ChartElem = document.querySelector('#no2Chart');
     const so2ChartElem = document.querySelector('#so2Chart');
 
-    /*document.querySelector('.dust25Container p').innerText = data.pm25Value.name;
-    document.querySelector('.dust10Container p').innerText = data.pm10Value.name;
-    document.querySelector('.o3Container p').innerText = data.o3Value.name;
-    document.querySelector('.coContainer p').innerText = data.coValue.name;
-    document.querySelector('.no2Container p').innerText = data.no2Value.name;
-    document.querySelector('.so2Container p').innerText = data.so2Value.name;*/
-
-    //const colorProfile = getColorForGrade(data.pm25Grade1h.value);
     colorProfiles.push(getColorForGrade(data.pm25Grade1h.value));
-    console.log('pm25: ', data.pm25Grade.value);
     colorProfiles.push(getColorForGrade(data.pm10Grade1h.value));
-    console.log('pm10: ', data.pm10Grade.value);
     colorProfiles.push(getColorForGrade(data.o3Grade.value));
-    console.log('o3: ', data.o3Grade.value);
     colorProfiles.push(getColorForGrade(data.coGrade.value));
-    console.log('co: ', data.coGrade.value);
     colorProfiles.push(getColorForGrade(data.no2Grade.value));
-    console.log('no: ', data.no2Grade.value);
     colorProfiles.push(getColorForGrade(data.so2Grade.value));
-    console.log('so: ', data.so2Grade.value);
 
     const drawGaugeBackground = {
         id: 'drawGaugeBackground',
@@ -297,26 +281,21 @@ function generateCharts(data) {
 
             ctx.strokeStyle = 'grey';
 
-            // 클립 뷰 용도의 도형으로 쓰일 원호 설정
             ctx.arc(xCenter, yCenter, radius, -205 * (Math.PI / 180), 25 * (Math.PI / 180));
             ctx.clip();
 
-            // 클립 뷰를 통해 보일 배경에 깔리는 사각형의 색상
             ctx.fillStyle = `rgba(
                 ${colorProfiles[chart.id].lightestColor[0]},
                 ${colorProfiles[chart.id].lightestColor[1]},
                 ${colorProfiles[chart.id].lightestColor[2]}, 1)`;
 
-            // 클립 뷰를 통해 보일 배경에 깔리는 사각형
             ctx.fillRect(0, 0, chart.width, chart.height);
 
-            // 이 부분 없으면 clip의 도형으로 쓰는 arc의 시작점과 끝점이 서로 이어지는 직선이 없이
-            ctx.closePath(); // 순수히 원호만 그려진다. 이 함수를 써서 Path의 시작과 끝을 이어주게 된다.
-            ctx.stroke(); // 그러나 이 함수를 사용하지 않으면 closePath()를 썼어도 Path가 그려지지 않는다.
+            ctx.closePath();
+            ctx.stroke();
 
-            // 수치 값을 받아오지 못했거나 그 값이 0인 경우 별도의 화면처리를 위한 설정.
             if ((getParticulateObj(ctx.canvas.id, data).value == '-') || (chart.data.datasets[0].data[0] == 0)) {
-                chart.data.datasets[0].data[0] = chartLimits[PM25Idx]; // 그래프 최대치로 값 상승
+                chart.data.datasets[0].data[0] = chartLimits[PM25Idx];
                 chart.data.datasets[0].data[1] = 0;
                 ctx.shadowColor = 'grey';
                 ctx.shadowBlur = 3;
@@ -385,19 +364,19 @@ function generateCharts(data) {
 
             ctx.save();
 
-            ctx.font = `bold ${valueFontSize}em sans-serif`; //'bold 50px sans-serif';
+            ctx.font = `bold ${valueFontSize}em sans-serif`;
             ctx.fillStyle = 'grey';
             ctx.textAlign = 'center';
-            if (circumference == 0) { // 원주 수치가 0일 때, 즉 처음 시작할 때와 끝났을 때
-                if ((getParticulateObj(ctx.canvas.id, data).value == '-') && (reverseFlags[chart.id] == false)) { // 만약에 값을 받아오지 못했고, 끝났을 때
+            if (circumference == 0) { 
+                if ((getParticulateObj(ctx.canvas.id, data).value == '-') && (reverseFlags[chart.id] == false)) {
                     circumference = '-';
-                } // 원주 수치가 0이고 받아온 값이 있거나 처음 시작하는 경우일 때는 원주 수치 0을 그대로 쓴다.
-            } // 원주 수치가 0 이외의 경우면 그냥 circumference 값 그대로 쓴다.
+                } 
+            } 
 
             meterVal[PM25] = circumference;
-            ctx.fillText(`${(+circumference).toString()}`, xCenter, yCenter - yOffset[0]); // 값 출력
-            ctx.font = `bold ${unitFontSize}em sans-serif`; //'bold 20px sans-serif';
-            ctx.fillText(`${getParticulateObj(ctx.canvas.id, data).unit}`, xCenter, yCenter + yOffset[1]); // 단위 출력
+            ctx.fillText(`${(+circumference).toString()}`, xCenter, yCenter - yOffset[0]);
+            ctx.font = `bold ${unitFontSize}em sans-serif`;
+            ctx.fillText(`${getParticulateObj(ctx.canvas.id, data).unit}`, xCenter, yCenter + yOffset[1]); 
 
             ctx.restore();
         }
@@ -430,10 +409,8 @@ function generateCharts(data) {
         return [primaryColor, secondaryColor];
     };
 
-    //var reverseFlag = true;
     var reverseFlags = [true, true, true, true, true, true];
 
-    // 초미세먼지 차트 ///////////////////////////////////////////////////////////////////////////////////////
     var pm25Chart = new Chart(pm25ChartElem, {
         type: 'doughnut',
         data: {
@@ -479,13 +456,13 @@ function generateCharts(data) {
                     if (data.pm25Value.value == '-') {
                         if (reverseFlags[0] == true) {
                             reverseFlags[0] = false;
-                            e.chart.toggleDataVisibility(0); // toggles the item in all datasets, at index 0
+                            e.chart.toggleDataVisibility(0);
                             e.chart.update('hide');
                         }
                     } else if (data.pm25Value.value == 0) {
                         if (reverseFlags[0]) {
                             reverseFlags[0] = false;
-                            e.chart.data.datasets[0].data = [0, chartLimits[PM25Idx]]; // update the data to zero value status
+                            e.chart.data.datasets[0].data = [0, chartLimits[PM25Idx]];
                             e.chart.update();
                         }
                     }
@@ -520,7 +497,6 @@ function generateCharts(data) {
         index: 0,
     }]);
 
-    // 미세먼지 차트 ///////////////////////////////////////////////////////////////////////////////////////
     var pm10Chart = new Chart(pm10ChartElem, {
         type: 'doughnut',
         data: {
@@ -566,13 +542,13 @@ function generateCharts(data) {
                     if (data.pm10Value.value == '-') {
                         if (reverseFlags[1] == true) {
                             reverseFlags[1] = false;
-                            e.chart.toggleDataVisibility(0); // toggles the item in all datasets, at index 0
+                            e.chart.toggleDataVisibility(0);
                             e.chart.update('hide');
                         }
                     } else if (data.pm10Value.value == 0) {
                         if (reverseFlags[1]) {
                             reverseFlags[1] = false;
-                            e.chart.data.datasets[0].data = [0, chartLimits[PM10Idx]]; // update the data to zero value status
+                            e.chart.data.datasets[0].data = [0, chartLimits[PM10Idx]];
                             e.chart.update();
                         }
                     }
@@ -607,7 +583,6 @@ function generateCharts(data) {
         index: 0,
     }]);
 
-    // 오존 차트 ///////////////////////////////////////////////////////////////////////////////////////
     var o3Chart = new Chart(o3ChartElem, {
         type: 'doughnut',
         data: {
@@ -646,20 +621,20 @@ function generateCharts(data) {
             aspectRatio: 1.1,
             events: [],
             layout: {
-                padding: 10//{ top: 8, left: 10, bottom: 10, right: 10 }
+                padding: 10
             },
             animation: {
                 onComplete(e) {
                     if (data.o3Value.value == '-') {
                         if (reverseFlags[2] == true) {
                             reverseFlags[2] = false;
-                            e.chart.toggleDataVisibility(0); // toggles the item in all datasets, at index 0
+                            e.chart.toggleDataVisibility(0); 
                             e.chart.update('hide');
                         }
                     } else if (data.o3Value.value == 0) {
                         if (reverseFlags[2]) {
                             reverseFlags[2] = false;
-                            e.chart.data.datasets[0].data = [0, chartLimits[O3Idx]]; // update the data to zero value status
+                            e.chart.data.datasets[0].data = [0, chartLimits[O3Idx]]; 
                             e.chart.update();
                         }
                     }
@@ -694,7 +669,6 @@ function generateCharts(data) {
         index: 0,
     }]);
 
-    // 일산화탄소 차트 ///////////////////////////////////////////////////////////////////////////////////////
     var coChart = new Chart(coChartElem, {
         type: 'doughnut',
         data: {
@@ -733,20 +707,20 @@ function generateCharts(data) {
             aspectRatio: 1.1,
             events: [],
             layout: {
-                padding: 10 // { top: 5, left: 10, bottom: 5, right: 10 }
+                padding: 10
             },
             animation: {
                 onComplete(e) {
                     if (data.coValue.value == '-') {
                         if (reverseFlags[3] == true) {
                             reverseFlags[3] = false;
-                            e.chart.toggleDataVisibility(0); // toggles the item in all datasets, at index 0
+                            e.chart.toggleDataVisibility(0);
                             e.chart.update('hide');
                         }
                     } else if (data.coValue.value == 0) {
                         if (reverseFlags[3]) {
                             reverseFlags[3] = false;
-                            e.chart.data.datasets[0].data = [0, chartLimits[COIdx]]; // update the data to zero value status
+                            e.chart.data.datasets[0].data = [0, chartLimits[COIdx]];
                             e.chart.update();
                         }
                     }
@@ -781,7 +755,6 @@ function generateCharts(data) {
         index: 0,
     }]);
 
-    // 이산화질소 차트 ///////////////////////////////////////////////////////////////////////////////////////
     var no2Chart = new Chart(no2ChartElem, {
         type: 'doughnut',
         data: {
@@ -820,20 +793,20 @@ function generateCharts(data) {
             aspectRatio: 1.1,
             events: [],
             layout: {
-                padding: 10 // { top: 5, left: 10, bottom: 5, right: 10 }
+                padding: 10 
             },
             animation: {
                 onComplete(e) {
                     if (data.no2Value.value == '-') {
                         if (reverseFlags[4] == true) {
                             reverseFlags[4] = false;
-                            e.chart.toggleDataVisibility(0); // toggles the item in all datasets, at index 0
+                            e.chart.toggleDataVisibility(0); 
                             e.chart.update('hide');
                         }
                     } else if (data.no2Value.value == 0) {
                         if (reverseFlags[4]) {
                             reverseFlags[4] = false;
-                            e.chart.data.datasets[0].data = [0, chartLimits[NO2Idx]]; // update the data to zero value status
+                            e.chart.data.datasets[0].data = [0, chartLimits[NO2Idx]]; 
                             e.chart.update();
                         }
                     }
@@ -868,7 +841,6 @@ function generateCharts(data) {
         index: 0,
     }]);
 
-    // 아황산가스 차트 ///////////////////////////////////////////////////////////////////////////////////////
     var so2Chart = new Chart(so2ChartElem, {
         type: 'doughnut',
         data: {
@@ -907,20 +879,20 @@ function generateCharts(data) {
             aspectRatio: 1.1,
             events: [],
             layout: {
-                padding: 10 // { top: 5, left: 10, bottom: 5, right: 10 }
+                padding: 10 
             },
             animation: {
                 onComplete(e) {
                     if (data.so2Value.value == '-') {
                         if (reverseFlags[5] == true) {
                             reverseFlags[5] = false;
-                            e.chart.toggleDataVisibility(0); // toggles the item in all datasets, at index 0
+                            e.chart.toggleDataVisibility(0); 
                             e.chart.update('hide');
                         }
                     } else if (data.so2Value.value == 0) {
                         if (reverseFlags[5]) {
                             reverseFlags[5] = false;
-                            e.chart.data.datasets[0].data = [0, chartLimits[SO2Idx]]; // update the data to zero value status
+                            e.chart.data.datasets[0].data = [0, chartLimits[SO2Idx]];
                             e.chart.update();
                         }
                     }
@@ -960,7 +932,6 @@ window.addEventListener(
     "load",
     (event) => {
         getAirConditionData();
-        console.log('load');
     },
     false,
 );
